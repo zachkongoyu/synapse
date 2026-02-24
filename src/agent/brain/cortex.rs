@@ -8,7 +8,26 @@ struct Cortex {
     tool_schemas: Vec<Value>,
 }
 
-enum Thought {}
+enum Response {
+    Executable(Action),
+    NonExecutable(String),
+}
+
+enum Action {
+    ToolCall {
+
+     },
+    ProgrammaticScript { 
+
+    },
+}
+
+struct Thought {
+    // what else?
+
+    // Output contract
+    response: Response,
+}
 
 impl Cortex {
     fn think(&self, memory: &Memory) -> Option<Thought> {
@@ -28,7 +47,7 @@ impl Cortex {
         // TODO(Programmatic Tool Calling (PTC)): Add a mode decision here:
         // - ExecutionMode::Interactive for regular small tasks
         // - ExecutionMode::Programmatic for script-based orchestration in runtime
-        //
+        
         // TODO(Programmatic Tool Calling (PTC)): In Programmatic mode:
         // 1) Ask the model for a script (not one-tool-per-turn calls).
         // 2) Send script to RuntimeOrchestrator.
