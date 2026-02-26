@@ -1,4 +1,5 @@
 mod agent;
+mod life;
 mod providers;
 mod skills;
 mod tools;

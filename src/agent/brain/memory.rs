@@ -1,6 +1,7 @@
-struct Message {
-    role: String,
-    content: Option<String>,
+#[derive(Clone, Debug)]
+pub struct Message {
+    pub role: String,
+    pub content: Option<String>,
 }
 
 pub struct Memory {

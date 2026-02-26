@@ -17,33 +17,85 @@ Most agent frameworks make you pick a provider, wire up your own connectors, and
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                      Agent                          │
-│                                                     │
-│  ┌──────────┐   ┌────────────┐   ┌───────────────┐  │
-│  │  Brain   │   │  Planning  │   │    Actions    │  │
-│  │          │   │            │   │               │  │
-│  │ Cortex   │   │  Tasks &   │   │  Skills       │  │
-│  │ Memory   │   │  State     │   │  Tool calls   │  │
-│  └────┬─────┘   └─────┬──────┘   └──────┬────────┘  │
-└───────┼───────────────┼─────────────────┼───────────┘
-        │               │                 │
-   LLM Providers   Planning loop     Platforms & DBs
-  (OpenAI, Copilot,  (ReAct / ToT)   (Postgres, Mongo,
-   Anthropic, …)                      Slack, REST, …)
+┌──────────────────────────────────────────────────────────────┐
+│                        Outer Scope: Life                     │
+│                                                              │
+│      state -> state -> state -> ...                          │
+│                                                              │
+│        living -> think -> interact -> update_state           │
+└──────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+                   Brain: Cortex::think
+                (provider output -> Thought)
 ```
 
 ### Core modules
 
 | Module | Description |
 |---|---|
-| `agent::brain::cortex` | The reasoning core. Wraps any `Provider` and drives the think → act loop. |
+| `agent::brain::cortex` | Think-only brain core. Converts perceived messages into a `Thought`. |
 | `agent::brain::memory` | Conversation and working memory. Stores, reads, and retrieves message history. |
-| `agent::planning` | Decomposes goals into ordered task lists and tracks execution state. |
-| `agent::action` | Dispatches tool calls returned by the LLM to the right skill or connector. |
+| `agent_loop` | Defines `Life` with `internal_state` + `external_state`, and drives `living()`. |
+| `agent::planning` | Reserved scaffold (not in active execution path right now). |
+| `agent::action` | Reserved scaffold for future action/tool routing. |
 | `providers` | Pluggable LLM backends (Copilot, OpenAI, Anthropic, …). |
 | `platforms` | Connectors to external systems (databases, APIs, messaging, …). |
 | `skills` | Reusable capabilities the agent can invoke (query builder, code runner, …). |
+
+---
+
+## Current Loop Model
+
+The runtime model is intentionally minimal and explicit:
+
+`Life::living -> think -> interact -> update_state -> repeat`
+
+- **State container** lives in `Life` as two entities:
+        - `internal_state` (currently includes `Memory`)
+        - `external_state`
+- **Think** produces a `Thought` from the current runtime context.
+- **Interact** applies that thought to the world boundary.
+- **UpdateState** applies post-interaction mutations to state.
+
+The loop itself lives at outer scope so callers can spawn/run an agent lifecycle directly, while brain internals remain isolated.
+
+---
+
+## Adaptive Intelligence Roadmap
+
+Synapse already has a strong architectural skeleton. The next evolution is to turn it into a continuously adaptive agent that behaves more like a living collaborator: aware of uncertainty, able to self-correct, and able to improve over time.
+
+### Current strengths
+
+- Clean separation of concerns across `cortex`, `memory`, `planning`, `action`, and `runtime`.
+- Support for both interactive and programmatic execution modes.
+- Early tool discovery and runtime policy primitives already in place.
+
+### What to add next
+
+- **Self-model**: track internal state such as goals, confidence, constraints, and budget.
+- **Metacognition loop**: evaluate each action for usefulness/correctness/safety, then adjust strategy.
+- **Memory curation**: move beyond append-only history into semantic + episodic memory with confidence and decay.
+- **Dynamic replanning**: trigger replans on tool failures, contradictory evidence, or low-confidence outcomes.
+- **Uncertainty behavior**: explicitly represent "not enough evidence yet" and gather more context before concluding.
+
+### Core adaptive loop (target behavior)
+
+`Living -> Think -> Interact -> UpdateState`
+
+This loop runs continuously and treats the system as a state machine over two entities: external world state and AI self state.
+
+### Prioritized implementation plan
+
+1. Keep `Cortex` think-only and stateless with respect to outer control flow.
+2. Evolve `Life` state transitions from TODO signatures into concrete implementations.
+3. Add structured LLM turn schema parsing (thought/action/evidence payload).
+4. Add tool execution bridge in `interact` and feed results back into memory/state.
+5. Enforce safety and budgets in `agent::runtime::{policy,sandbox}` for all interactions.
+6. Add evaluation harnesses for regression tracking (task success, correction rate, hallucination rate).
+
+These changes preserve Synapse's provider/platform/database-agnostic design while making the agent significantly more reliable, self-correcting, and "alive" in practice.
 
 ---
 
@@ -101,6 +153,13 @@ cargo build --release
 ```bash
 cargo run
 ```
+
+### Async Runtime
+
+Synapse uses **Tokio** as its async runtime.
+
+- Core modules expose async signatures.
+- Runtime driving/execution happens at the application boundary (entrypoint / runner).
 
 ---
 

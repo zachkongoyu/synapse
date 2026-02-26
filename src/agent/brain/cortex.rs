@@ -1,61 +1,31 @@
 use serde_json::Value;
-use crate::agent::brain::memory::Memory;
-use crate::agent::runtime::ExecutionMode;
+use crate::agent::brain::memory::Message;
+use std::future::Future;
+use std::pin::Pin;
 
-struct Cortex {
+mod thought;
+pub(crate) use self::thought::Thought;
+
+pub(crate) struct Cortex {
     mind: Box<dyn Provider>,
     identity: String,
     tool_schemas: Vec<Value>,
 }
 
-enum Response {
-    Executable(Action),
-    NonExecutable(String),
-}
-
-enum Action {
-    ToolCall {
-
-     },
-    ProgrammaticScript { 
-
-    },
-}
-
-struct Thought {
-    // what else?
-
-    // Output contract
-    response: Response,
+pub(crate) trait Provider: Send + Sync {
+    fn process<'a>(
+        &'a self,
+        messages: &'a [crate::agent::brain::memory::Message],
+    ) -> Pin<Box<dyn Future<Output = Value> + Send + 'a>>;
 }
 
 impl Cortex {
-    fn think(&self, memory: &Memory) -> Option<Thought> {
-        let messages = memory.read(None);
+    pub(crate) fn identity(&self) -> &str {
+        todo!()
+    }
 
-        // TODO(Tool Search Tool): Start with only core tools loaded.
-        // TODO(Tool Search Tool): Always include native tool "search_tools".
-        // TODO(Tool Search Tool): If model asks for more, call search_tools(query).
-        // TODO(Tool Search Tool): Load only matched full tool schemas, not everything.
-        // TODO(Tool Search Tool): In next LLM turn, inject only those matched schemas.
-        // QUESTION: Which tools are your "always loaded" core set?
-
-        // TODO(Tool Use Examples): Before calling a selected tool,
-        // inject 1-3 tool examples as short prompt hints.
-        // QUESTION: Should examples be shown in system prompt or tool description?
-
-        // TODO(Programmatic Tool Calling (PTC)): Add a mode decision here:
-        // - ExecutionMode::Interactive for regular small tasks
-        // - ExecutionMode::Programmatic for script-based orchestration in runtime
-        
-        // TODO(Programmatic Tool Calling (PTC)): In Programmatic mode:
-        // 1) Ask the model for a script (not one-tool-per-turn calls).
-        // 2) Send script to RuntimeOrchestrator.
-        // 3) Runtime handles many tool calls internally.
-        // 4) Only memorize final compact summary.
-        let _mode = ExecutionMode::Interactive;
-
-        let response = self.mind.process(messages);
-        None
+    pub(crate) async fn think(&self, messages: &[Message]) -> Thought {
+        let _ = messages;
+        todo!()
     }
 }
