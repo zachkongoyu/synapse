@@ -2,6 +2,8 @@
 
 A decentralized, biological approach to Large Language Model agents, modeled after the life cycle of slime molds (*Physarum polycephalum*). This project moves away from human-centric "brain" architectures toward a **Reaction-Diffusion** model of intelligence.
 
+![alt text](image.png)
+
 ---
 
 ## 🧬 Philosophy: The Slime Flow
