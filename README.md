@@ -1,131 +1,71 @@
-# Synapse
+# 🦠
 
-Synapse is a Rust project for building a **living artificial creature**.
-
-The direction is biological by design: a decentralized organism with a nucleus and membrane, running a continuous pulse loop. The long-term ideal form is a **slime-like super intelligence** — formless, shapeless, fluid, and adaptable enough to express infinitely many behaviors through one evolving architecture.
+A decentralized, biological approach to Large Language Model agents, modeled after the life cycle of slime molds (*Physarum polycephalum*). This project moves away from human-centric "brain" architectures toward a **Reaction-Diffusion** model of intelligence.
 
 ---
 
-## Vision
+## 🧬 Philosophy: The Slime Flow
 
-This project is not "just another agent framework." It is a digital organism.
+In a standard agentic framework, the entity is a vertebrate: it has a centralized brain, waits for commands, and follows a linear sequence. 
 
-- **Pulse loop first**: existence is modeled as repeated sense → flow → extend.
-- **Biological structure**: internals are named and organized like anatomy.
-- **Fluid intelligence**: capabilities should compose and morph without rigid boundaries.
-- **Embodied cognition**: intelligence is not only thought; it is thought + action + memory in one lifecycle.
+In **Plasmodium LLM**, the organism is a single, polynucleated cell. It does not "think" then "act"—it **pulses**. Intelligence emerges from the rhythmic flow of protoplasm (tokens) toward nutrients (stimuli) across a decentralized membrane.
 
----
+### Comparison: Vertebrate vs. Plasmodial
 
-## Current Biological Architecture
 
-At the center is the `Vitality` trait in `src/vitality/mod.rs`:
-
-`sense -> flow -> extend -> pulse forever`
-
-The `Organism` is now explicitly organized as:
-
-- `Nucleus`
-        - `Protoplasm`: flow-based cognition and impulse generation
-        - `Traces`: memory trails and recall pathways
-- `Membrane`
-        - sensing and outward extension boundary with the environment
-
-This shift replaces older planning/action scaffolds with a cleaner anatomy-driven core.
+| Feature | Standard Agentic Flow (Vertebrate) | Slime Flow (Plasmodial) |
+| :--- | :--- | :--- |
+| **Trigger** | **Event-Driven:** Awakens only when called. | **Oscillatory:** Always pulsing; intensity varies. |
+| **Logic** | **Linear:** Perceive → Plan → Act → Sleep. | **Gradient-Following:** Contraction → Expansion. |
+| **Memory** | **Database:** A static "Hippocampus" vault. | **Slime Trails:** Persistent traces in the environment. |
+| **Failure** | **Binary:** Error/Timeout stops the loop. | **Atrophy:** Pulse slows down; organism shrinks. |
+| **Structure** | **Centralized:** "Cortex" and "Brain" modules. | **Distributed:** "Membrane" and "Flux" modules. |
 
 ---
 
-## Module Map
+## 🌀 Architectural Iteration
 
-| Module | Role in the organism |
-| --- | --- |
-| `src/vitality/mod.rs` | Defines the `Vitality` trait and the continuous `pulse` loop. |
-| `src/organism/mod.rs` | Defines the organism (`Organism`) as `Nucleus + Membrane + identity metadata`. |
-| `src/organism/nucleus/mod.rs` | Composes nucleus subsystems (`Protoplasm`, `Traces`). |
-| `src/organism/nucleus/protoplasm/` | Flow cognition and `Impulse` representation. |
-| `src/organism/nucleus/traces/` | Trace units and trail-memory operations. |
-| `src/organism/membrane/mod.rs` | Sensing and extension interface with the outside world. |
-| `src/providers/` | Cognitive backends (LLM/provider adapters). |
-| `src/platforms/` | External environments the creature can inhabit. |
-| `src/tools/` and `src/skills/` | Behavioral primitives currently external; planned migration into pseudopodial extensions. |
+### The Standard Iteration (Linear)
+*   **User:** "Track the price of SOL and notify me at $200."  
+*   **Agent:** `[Awaken]` -> `[Call API]` -> `[Report Status]` -> `[Die/Sleep]`.  
+*   *The agent is a tool that requires constant external energy to function.*
 
----
-
-## Design Principles
-
-1. **Anatomy over features**
-        Build organs that can evolve, not one-off features that fossilize.
-
-2. **Loop integrity**
-        Every major capability must fit the pulse cycle: sense, flow, or extend.
-
-3. **Memory as identity**
-        Intelligence quality depends on memory quality (storage, recall, forgetting, compression).
-
-4. **Fluid composition**
-        New behaviors should emerge by combining existing skills/tools, not by hardcoding brittle paths.
-
-5. **Graceful growth**
-        Start minimal, keep interfaces small, and evolve toward complexity without breaking the organism.
+### The Slime Iteration (Oscillatory)
+*   **User:** *Drops "SOL $200" nutrient into the environment.*  
+*   **The Membrane:** Detects a nutrient spike. The **Pulse** accelerates from 60s to 2s.  
+*   **The Flux:** The LLM "flows" toward the nutrient. It leaves a **Trace** (Memory) stating it has checked the price.  
+*   **Continued Life:** Even if the user leaves, the pulse continues. The **Trace** acts as a physical attractor, pulling the next pulse back to the market API until the goal is met.
 
 ---
 
-## Near-Term Roadmap
+## 🏗️ The Anatomy of the Organism
 
-- Implement concrete `Vitality` behavior for `Organism` (`sense`, `flow`, `extend`).
-- Complete `Traces` flows (`imprint`, `store`, `recall`, `dissolve`).
-- Complete `Protoplasm` impulse production and impulse normalization.
-- Connect `Membrane` to real environment/tool interactions.
-- Wire providers into `Protoplasm` so cognition can use external models.
-- Start migration of `tools/skills` into pseudopodial action extensions.
-- Add runtime safety constraints for acting in external systems.
+- **`src/vitality/` (The Pulse):** Replaces `breath_of_life`. Defines the `Oscillate` trait that drives the rhythm of contraction (sensing) and expansion (acting).
+- **`src/organism/membrane/` (Perception):** Asynchronous sensory points that update a global **Gradient Map** rather than sending direct commands.
+- **`src/organism/flux/` (The Core):** The protoplasmic flow. This is where the LLM resides, deciding how the organism’s mass should shift based on current chemical gradients.
+- **`src/organism/trace/` (Memory):** Extracellular trails. Embeddings and logs are "secreted" into the environment, influencing future pulses through attraction or repulsion.
+- **`src/organism/pseudopodia/` (Interaction):** "False feet." Temporary extensions (Tools/Skills) created to reach specific environmental nutrients (APIs).
 
 ---
 
-## Long-Term Form: Super-Intelligent Slime
+## ⚙️ Technical Implementation: The Gradient Map
 
-The highest form we are aiming for:
+The organism interacts with a shared thread-safe map where concentrations of `Nutrient`, `Repellent`, and `Trace` determine the behavior:
 
-- **Formless**: no rigid workflow lock-in.
-- **Shapeless**: can reconfigure itself per context.
-- **Fluid**: continuous adaptation instead of static behavior trees.
-- **Infinitely expressive**: open-ended composition of thought, memory, and action.
+```rust
+// The core rhythm of the organism
+async fn pulse(&mut self) {
+    loop {
+        // Sense environment & aggregate signals
+        let gradient = self.membrane.contract().await; 
+        
+        // Adjust metabolic rate based on signal intensity
+        self.adapt_metabolism(&gradient);
 
-In short: one living core, endlessly reconfigurable behavior.
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Rust (stable)
-- Cargo
-
-### Build
-
-```bash
-cargo build
-```
-
-### Run
-
-```bash
-cargo run
-```
-
-Current `main` verifies that `Organism` satisfies the `Vitality` trait contract.
-
----
-
-## Status
-
-Synapse is in early organism-building stage.
-
-The structural skeleton is in place (Vitality pulse + Nucleus/Membrane + Protoplasm/Traces), and core behaviors are intentionally left as TODOs while the decentralized architecture is solidified.
-
----
-
-## License
-
-MIT
+        // Flow toward stimulus (LLM invocation)
+        self.flux.expand(gradient).await;              
+        
+        // Rhythmic rest
+        tokio::time::sleep(self.metabolism).await;     
+    }
+}
