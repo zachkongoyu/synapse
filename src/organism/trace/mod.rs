@@ -1,11 +1,11 @@
 mod trace;
 use trace::Trace;
 
-pub(crate) struct Traces {
+pub(crate) struct TraceField {
     traces: Vec<Trace>,
 }
 
-impl Traces {
+impl TraceField {
     pub(crate) fn new() -> Self {
         Self { traces: Vec::new() }
     }

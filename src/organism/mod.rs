@@ -1,11 +1,14 @@
 mod membrane;
-mod nucleus;
+mod flux;
+mod trace;
 
 use membrane::Membrane;
-use nucleus::Nucleus;
+use flux::Flux;
+use trace::TraceField;
 
 pub struct Organism {
-    nucleus: Nucleus,
+    flux: Flux,
+    trace_field: TraceField,
     membrane: Membrane,
     id: u64,
     name: String,
@@ -15,7 +18,8 @@ pub struct Organism {
 impl Organism {
     pub fn new(id: u64, name: String, birthed_at: String) -> Self {
         Self {
-            nucleus: Nucleus::new(),
+            flux: Flux::new(),
+            trace_field: TraceField::new(),
             membrane: Membrane::new(),
             id,
             name,
@@ -24,7 +28,7 @@ impl Organism {
     }
 
     pub async fn flow(&self) {
-        self.nucleus.protoplasm.flow().await;
+        self.flux.flow().await;
     }
 
     pub async fn extend(&self) {

@@ -1,9 +1,9 @@
 mod impulse;
 use impulse::Impulse;
 
-pub(crate) struct Protoplasm;
+pub(crate) struct Flux;
 
-impl Protoplasm {
+impl Flux {
     pub(crate) fn new() -> Self {
         Self
     }

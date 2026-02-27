@@ -8,7 +8,7 @@ impl Impulse {
     const MAX_CONTENT_LEN: usize = 280;
     const EMPTY_CONTENT_FALLBACK: &str = "...";
 
-    pub(in crate::organism::nucleus::protoplasm) fn new(
+    pub(in crate::organism::flux) fn new(
         id: u64,
         parent_id: Option<u64>,
         content: impl Into<String>,
