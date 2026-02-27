@@ -33,5 +33,4 @@ impl Thought {
         let _ = content;
         todo!()
     }
-
 }

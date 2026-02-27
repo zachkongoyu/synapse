@@ -1,135 +1,96 @@
 # Synapse
 
-An AI agent framework for LLM infrastructure, written in Rust. Synapse lets you build agents that talk to **any LLM provider**, connect to **any external platform**, and — critically — translate natural language into accurate, executable **database commands** across any database engine.
+Synapse is a Rust project for building a **living artificial creature**.
+
+The direction is biological by design: a creature with a brain and body, running a continuous life loop. The long-term ideal form is a **slime-like super intelligence** — formless, shapeless, fluid, and adaptable enough to express infinitely many behaviors through one evolving architecture.
 
 ---
 
-## Why Synapse?
+## Vision
 
-Most agent frameworks make you pick a provider, wire up your own connectors, and then fumble through prompt engineering whenever a user asks something that touches a database. Synapse is built around the opposite philosophy:
+This project is not "just another agent framework." It is a digital organism.
 
-- **Provider-agnostic** — swap between OpenAI, Anthropic, GitHub Copilot, or your own endpoint in one line.
-- **Platform-agnostic** — a uniform connector model lets agents reach Slack, GitHub, REST APIs, message queues, or any other external system.
-- **Database-first** — the agent's reasoning layer understands schemas, dialects, and query semantics so that "show me last month's revenue by region" becomes a correct SQL (or Cypher, MQL, …) query, not a hallucination.
+- **Living loop first**: existence is modeled as repeated perceive → think → act.
+- **Biological structure**: internals are named and organized like anatomy.
+- **Fluid intelligence**: capabilities should compose and morph without rigid boundaries.
+- **Embodied cognition**: intelligence is not only thought; it is thought + action + memory in one lifecycle.
 
 ---
 
-## Architecture
+## Current Biological Architecture
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                        Outer Scope: Life                     │
-│                                                              │
-│      state -> state -> state -> ...                          │
-│                                                              │
-│        living -> think -> interact -> update_state           │
-└──────────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-                   Brain: Cortex::think
-                (provider output -> Thought)
-```
+At the center is the `Life` trait in `src/breath_of_life.rs`:
 
-### Core modules
+`perceive -> think -> act -> loop forever`
 
-| Module | Description |
+The `Agent` is now explicitly organized as:
+
+- `Brain`
+  - `Cortex`: thought generation
+  - `Hippocampus`: memory storage and recall
+- `Body`
+  - perception and action boundary with the outside world
+
+This shift replaces older planning/action scaffolds with a cleaner anatomy-driven core.
+
+---
+
+## Module Map
+
+| Module | Role in the organism |
 |---|---|
-| `agent::brain::cortex` | Think-only brain core. Converts perceived messages into a `Thought`. |
-| `agent::brain::memory` | Conversation and working memory. Stores, reads, and retrieves message history. |
-| `agent_loop` | Defines `Life` with `internal_state` + `external_state`, and drives `living()`. |
-| `agent::planning` | Reserved scaffold (not in active execution path right now). |
-| `agent::action` | Reserved scaffold for future action/tool routing. |
-| `providers` | Pluggable LLM backends (Copilot, OpenAI, Anthropic, …). |
-| `platforms` | Connectors to external systems (databases, APIs, messaging, …). |
-| `skills` | Reusable capabilities the agent can invoke (query builder, code runner, …). |
+| `src/breath_of_life.rs` | Defines the `Life` trait and the eternal living loop. |
+| `src/agent/mod.rs` | Defines the creature (`Agent`) as `Brain + Body + identity metadata`. |
+| `src/agent/brain/mod.rs` | Composes brain subsystems (`Cortex`, `Hippocampus`). |
+| `src/agent/brain/cortex/` | Thinking pipeline and `Thought` representation. |
+| `src/agent/brain/hippocampus/` | Memory units and memory operations. |
+| `src/agent/body/mod.rs` | Perception and physicalized action interface. |
+| `src/providers/` | Cognitive backends (LLM/provider adapters). |
+| `src/platforms/` | External environments the creature can inhabit. |
+| `src/tools/` and `src/skills/` | Behavioral primitives and reusable capabilities. |
 
 ---
 
-## Current Loop Model
+## Design Principles
 
-The runtime model is intentionally minimal and explicit:
+1. **Anatomy over features**
+        Build organs that can evolve, not one-off features that fossilize.
 
-`Life::living -> think -> interact -> update_state -> repeat`
+2. **Loop integrity**
+        Every major capability must fit the life cycle: perceive, think, or act.
 
-- **State container** lives in `Life` as two entities:
-        - `internal_state` (currently includes `Memory`)
-        - `external_state`
-- **Think** produces a `Thought` from the current runtime context.
-- **Interact** applies that thought to the world boundary.
-- **UpdateState** applies post-interaction mutations to state.
+3. **Memory as identity**
+        Intelligence quality depends on memory quality (storage, recall, forgetting, compression).
 
-The loop itself lives at outer scope so callers can spawn/run an agent lifecycle directly, while brain internals remain isolated.
+4. **Fluid composition**
+        New behaviors should emerge by combining existing skills/tools, not by hardcoding brittle paths.
 
----
-
-## Adaptive Intelligence Roadmap
-
-Synapse already has a strong architectural skeleton. The next evolution is to turn it into a continuously adaptive agent that behaves more like a living collaborator: aware of uncertainty, able to self-correct, and able to improve over time.
-
-### Current strengths
-
-- Clean separation of concerns across `cortex`, `memory`, `planning`, `action`, and `runtime`.
-- Support for both interactive and programmatic execution modes.
-- Early tool discovery and runtime policy primitives already in place.
-
-### What to add next
-
-- **Self-model**: track internal state such as goals, confidence, constraints, and budget.
-- **Metacognition loop**: evaluate each action for usefulness/correctness/safety, then adjust strategy.
-- **Memory curation**: move beyond append-only history into semantic + episodic memory with confidence and decay.
-- **Dynamic replanning**: trigger replans on tool failures, contradictory evidence, or low-confidence outcomes.
-- **Uncertainty behavior**: explicitly represent "not enough evidence yet" and gather more context before concluding.
-
-### Core adaptive loop (target behavior)
-
-`Living -> Think -> Interact -> UpdateState`
-
-This loop runs continuously and treats the system as a state machine over two entities: external world state and AI self state.
-
-### Prioritized implementation plan
-
-1. Keep `Cortex` think-only and stateless with respect to outer control flow.
-2. Evolve `Life` state transitions from TODO signatures into concrete implementations.
-3. Add structured LLM turn schema parsing (thought/action/evidence payload).
-4. Add tool execution bridge in `interact` and feed results back into memory/state.
-5. Enforce safety and budgets in `agent::runtime::{policy,sandbox}` for all interactions.
-6. Add evaluation harnesses for regression tracking (task success, correction rate, hallucination rate).
-
-These changes preserve Synapse's provider/platform/database-agnostic design while making the agent significantly more reliable, self-correcting, and "alive" in practice.
+5. **Graceful growth**
+        Start minimal, keep interfaces small, and evolve toward complexity without breaking the organism.
 
 ---
 
-## LLM Providers
+## Near-Term Roadmap
 
-Synapse ships with first-party provider support and a simple trait you can implement for anything else.
-
-| Provider | Status |
-|---|---|
-| GitHub Copilot | ✅ OAuth device-flow, automatic token refresh, disk caching |
-| OpenAI | 🚧 In progress |
-| Anthropic | 🚧 In progress |
-| Custom / self-hosted | ✅ Implement the `Provider` trait |
-
-The Copilot provider authenticates via GitHub's device-flow — the same mechanism the VS Code extension uses — so no API key management is required.
+- Implement concrete `Life` behavior for `Agent` (`perceive`, `think`, `act`).
+- Complete `Hippocampus` flows (`memorize`, `store`, `recall`, `forget`).
+- Complete `Cortex` thought production and thought normalization.
+- Connect `Body` to real environment/tool interactions.
+- Wire providers into `Cortex` so cognition can use external models.
+- Add runtime safety constraints for acting in external systems.
 
 ---
 
-## Database Intelligence
+## Long-Term Form: Super-Intelligent Slime
 
-Synapse treats databases as first-class citizens, not afterthoughts. The agent:
+The highest form we are aiming for:
 
-1. **Introspects schemas** at connection time so it understands table structures, types, and relationships.
-2. **Translates intent** — the Cortex converts a user's natural language request into a precise query in the correct dialect (SQL, Cypher, MQL, DynamoDB expressions, …).
-3. **Validates before executing** — the planned query is checked for safety and correctness before it ever touches the database.
-4. **Explains results** — raw results are interpreted back into natural language with the original question in mind.
+- **Formless**: no rigid workflow lock-in.
+- **Shapeless**: can reconfigure itself per context.
+- **Fluid**: continuous adaptation instead of static behavior trees.
+- **Infinitely expressive**: open-ended composition of thought, memory, and action.
 
-Planned database targets:
-
-- Relational: PostgreSQL, MySQL, SQLite
-- Document: MongoDB
-- Graph: Neo4j
-- Key-value / wide-column: Redis, Cassandra, DynamoDB
-- Vector: pgvector, Qdrant, Weaviate
+In short: one living core, endlessly reconfigurable behavior.
 
 ---
 
@@ -137,15 +98,13 @@ Planned database targets:
 
 ### Prerequisites
 
-- Rust 1.75+
+- Rust (stable)
 - Cargo
 
 ### Build
 
 ```bash
-git clone https://github.com/your-org/synapse
-cd synapse
-cargo build --release
+cargo build
 ```
 
 ### Run
@@ -154,20 +113,15 @@ cargo build --release
 cargo run
 ```
 
-### Async Runtime
-
-Synapse uses **Tokio** as its async runtime.
-
-- Core modules expose async signatures.
-- Runtime driving/execution happens at the application boundary (entrypoint / runner).
+Current `main` verifies that `Agent` satisfies the `Life` trait contract.
 
 ---
 
-## Project Status
+## Status
 
-Synapse is in early active development. The core `Brain` (Cortex + Memory), the Copilot provider, and the module skeleton are in place. Provider abstraction, the planning loop, database connectors, and the skills system are being built out now.
+Synapse is in early organism-building stage.
 
-Contributions, feedback, and use-case ideas are welcome — open an issue or a PR.
+The structural skeleton is in place (Life loop + Brain/Body + Cortex/Hippocampus), and core behaviors are intentionally left as TODOs while the biological architecture is solidified.
 
 ---
 
