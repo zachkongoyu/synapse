@@ -2,7 +2,7 @@
 
 Synapse is a Rust project for building a **living artificial creature**.
 
-The direction is biological by design: a creature with a brain and body, running a continuous life loop. The long-term ideal form is a **slime-like super intelligence** — formless, shapeless, fluid, and adaptable enough to express infinitely many behaviors through one evolving architecture.
+The direction is biological by design: a decentralized organism with a nucleus and membrane, running a continuous pulse loop. The long-term ideal form is a **slime-like super intelligence** — formless, shapeless, fluid, and adaptable enough to express infinitely many behaviors through one evolving architecture.
 
 ---
 
@@ -10,7 +10,7 @@ The direction is biological by design: a creature with a brain and body, running
 
 This project is not "just another agent framework." It is a digital organism.
 
-- **Living loop first**: existence is modeled as repeated perceive → think → act.
+- **Pulse loop first**: existence is modeled as repeated sense → flow → extend.
 - **Biological structure**: internals are named and organized like anatomy.
 - **Fluid intelligence**: capabilities should compose and morph without rigid boundaries.
 - **Embodied cognition**: intelligence is not only thought; it is thought + action + memory in one lifecycle.
@@ -19,17 +19,17 @@ This project is not "just another agent framework." It is a digital organism.
 
 ## Current Biological Architecture
 
-At the center is the `Life` trait in `src/breath_of_life.rs`:
+At the center is the `Vitality` trait in `src/vitality/mod.rs`:
 
-`perceive -> think -> act -> loop forever`
+`sense -> flow -> extend -> pulse forever`
 
-The `Agent` is now explicitly organized as:
+The `Organism` is now explicitly organized as:
 
-- `Brain`
-  - `Cortex`: thought generation
-  - `Hippocampus`: memory storage and recall
-- `Body`
-  - perception and action boundary with the outside world
+- `Nucleus`
+        - `Protoplasm`: flow-based cognition and impulse generation
+        - `Traces`: memory trails and recall pathways
+- `Membrane`
+        - sensing and outward extension boundary with the environment
 
 This shift replaces older planning/action scaffolds with a cleaner anatomy-driven core.
 
@@ -38,16 +38,16 @@ This shift replaces older planning/action scaffolds with a cleaner anatomy-drive
 ## Module Map
 
 | Module | Role in the organism |
-|---|---|
-| `src/breath_of_life.rs` | Defines the `Life` trait and the eternal living loop. |
-| `src/agent/mod.rs` | Defines the creature (`Agent`) as `Brain + Body + identity metadata`. |
-| `src/agent/brain/mod.rs` | Composes brain subsystems (`Cortex`, `Hippocampus`). |
-| `src/agent/brain/cortex/` | Thinking pipeline and `Thought` representation. |
-| `src/agent/brain/hippocampus/` | Memory units and memory operations. |
-| `src/agent/body/mod.rs` | Perception and physicalized action interface. |
+| --- | --- |
+| `src/vitality/mod.rs` | Defines the `Vitality` trait and the continuous `pulse` loop. |
+| `src/organism/mod.rs` | Defines the organism (`Organism`) as `Nucleus + Membrane + identity metadata`. |
+| `src/organism/nucleus/mod.rs` | Composes nucleus subsystems (`Protoplasm`, `Traces`). |
+| `src/organism/nucleus/protoplasm/` | Flow cognition and `Impulse` representation. |
+| `src/organism/nucleus/traces/` | Trace units and trail-memory operations. |
+| `src/organism/membrane/mod.rs` | Sensing and extension interface with the outside world. |
 | `src/providers/` | Cognitive backends (LLM/provider adapters). |
 | `src/platforms/` | External environments the creature can inhabit. |
-| `src/tools/` and `src/skills/` | Behavioral primitives and reusable capabilities. |
+| `src/tools/` and `src/skills/` | Behavioral primitives currently external; planned migration into pseudopodial extensions. |
 
 ---
 
@@ -57,7 +57,7 @@ This shift replaces older planning/action scaffolds with a cleaner anatomy-drive
         Build organs that can evolve, not one-off features that fossilize.
 
 2. **Loop integrity**
-        Every major capability must fit the life cycle: perceive, think, or act.
+        Every major capability must fit the pulse cycle: sense, flow, or extend.
 
 3. **Memory as identity**
         Intelligence quality depends on memory quality (storage, recall, forgetting, compression).
@@ -72,11 +72,12 @@ This shift replaces older planning/action scaffolds with a cleaner anatomy-drive
 
 ## Near-Term Roadmap
 
-- Implement concrete `Life` behavior for `Agent` (`perceive`, `think`, `act`).
-- Complete `Hippocampus` flows (`memorize`, `store`, `recall`, `forget`).
-- Complete `Cortex` thought production and thought normalization.
-- Connect `Body` to real environment/tool interactions.
-- Wire providers into `Cortex` so cognition can use external models.
+- Implement concrete `Vitality` behavior for `Organism` (`sense`, `flow`, `extend`).
+- Complete `Traces` flows (`imprint`, `store`, `recall`, `dissolve`).
+- Complete `Protoplasm` impulse production and impulse normalization.
+- Connect `Membrane` to real environment/tool interactions.
+- Wire providers into `Protoplasm` so cognition can use external models.
+- Start migration of `tools/skills` into pseudopodial action extensions.
 - Add runtime safety constraints for acting in external systems.
 
 ---
@@ -113,7 +114,7 @@ cargo build
 cargo run
 ```
 
-Current `main` verifies that `Agent` satisfies the `Life` trait contract.
+Current `main` verifies that `Organism` satisfies the `Vitality` trait contract.
 
 ---
 
@@ -121,7 +122,7 @@ Current `main` verifies that `Agent` satisfies the `Life` trait contract.
 
 Synapse is in early organism-building stage.
 
-The structural skeleton is in place (Life loop + Brain/Body + Cortex/Hippocampus), and core behaviors are intentionally left as TODOs while the biological architecture is solidified.
+The structural skeleton is in place (Vitality pulse + Nucleus/Membrane + Protoplasm/Traces), and core behaviors are intentionally left as TODOs while the decentralized architecture is solidified.
 
 ---
 

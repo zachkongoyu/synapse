@@ -1,14 +1,14 @@
-pub(crate) struct Thought {
+pub(crate) struct Impulse {
     id: u64,
     parent_id: Option<u64>,
     content: String,
 }
 
-impl Thought {
+impl Impulse {
     const MAX_CONTENT_LEN: usize = 280;
     const EMPTY_CONTENT_FALLBACK: &str = "...";
 
-    pub(in crate::agent::brain::cortex) fn new(
+    pub(in crate::organism::nucleus::protoplasm) fn new(
         id: u64,
         parent_id: Option<u64>,
         content: impl Into<String>,

@@ -1,10 +1,10 @@
-mod agent;
-mod breath_of_life;
+mod organism;
+mod vitality;
 mod providers;
 mod skills;
 mod tools;
 
 fn main() {
-    breath_of_life::assert_life_impl::<agent::Agent>();
+    vitality::assert_vitality_impl::<organism::Organism>();
     println!("Hello, world!");
 }

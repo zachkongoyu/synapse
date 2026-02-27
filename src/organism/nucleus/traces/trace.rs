@@ -1,9 +1,9 @@
-pub struct Memory {
+pub struct Trace {
     id: u64,
     content: String,
 }
 
-impl Memory {
+impl Trace {
     pub(super) fn new(id: u64, content: String) -> Self {
         Self { id, content }
     }
