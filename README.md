@@ -1,73 +1,66 @@
-# 🦠
+# 🦠 slime
 
-A decentralized, biological approach to Large Language Model agents, modeled after the life cycle of slime molds (*Physarum polycephalum*). This project moves away from human-centric "brain" architectures toward a **Reaction-Diffusion** model of intelligence.
+`slime` is a decentralized LLM agent framework inspired by slime mold behavior.
+The core unit is a **Mass** that continuously handles fresh I/O through stateless pulses.
 
 ![alt text](image.png)
 
 ---
 
-## 🧬 Philosophy: The Slime Flow
+## 🧬 Core Principle: Stateless Pulses
 
-In a standard agentic framework, the entity is a vertebrate: it has a centralized brain, waits for commands, and follows a linear sequence. 
+This framework focuses on **statelessness**:
 
-In **Plasmodium LLM**, the organism is a single, polynucleated cell. It does not "think" then "act"—it **pulses**. Intelligence emerges from the rhythmic flow of protoplasm (tokens) toward nutrients (stimuli) across a decentralized membrane.
+- Every pulse is a fresh I/O cycle for LLM calls.
+- A pulse does not carry conversational state internally.
+- The shared **Blackboard** stores evolving state from user input and pulse output.
+- Future pulses read the current blackboard snapshot, then produce new output.
 
-### Comparison: Vertebrate vs. Plasmodial
-
-
-| Feature | Standard Agentic Flow (Vertebrate) | Slime Flow (Plasmodial) |
-| :--- | :--- | :--- |
-| **Trigger** | **Event-Driven:** Awakens only when called. | **Oscillatory:** Always pulsing; intensity varies. |
-| **Logic** | **Linear:** Perceive → Plan → Act → Sleep. | **Gradient-Following:** Contraction → Expansion. |
-| **Memory** | **Database:** A static "Hippocampus" vault. | **Slime Trails:** Persistent traces in the environment. |
-| **Failure** | **Binary:** Error/Timeout stops the loop. | **Atrophy:** Pulse slows down; organism shrinks. |
-| **Structure** | **Centralized:** "Cortex" and "Brain" modules. | **Distributed:** "Membrane" and "Flux" modules. |
+In short: **state lives in memory, not in pulses**.
 
 ---
 
-## 🌀 Architectural Iteration
+## 🏗️ Refined Structure
 
-### The Standard Iteration (Linear)
-*   **User:** "Track the price of SOL and notify me at $200."  
-*   **Agent:** `[Awaken]` -> `[Call API]` -> `[Report Status]` -> `[Die/Sleep]`.  
-*   *The agent is a tool that requires constant external energy to function.*
-
-### The Slime Iteration (Oscillatory)
-*   **User:** *Drops "SOL $200" nutrient into the environment.*  
-*   **The Membrane:** Detects a nutrient spike. The **Pulse** accelerates from 60s to 2s.  
-*   **The Flux:** The LLM "flows" toward the nutrient. It leaves a **Trace** (Memory) stating it has checked the price.  
-*   **Continued Life:** Even if the user leaves, the pulse continues. The **Trace** acts as a physical attractor, pulling the next pulse back to the market API until the goal is met.
-
----
-
-## 🏗️ The Anatomy of the Organism
-
-- **`src/vitality/` (The Pulse):** Replaces `breath_of_life`. Defines the `Oscillate` trait that drives the rhythm of contraction (sensing) and expansion (acting).
-- **`src/organism/membrane/` (Perception):** Asynchronous sensory points that update a global **Gradient Map** rather than sending direct commands.
-- **`src/organism/flux/` (The Core):** The protoplasmic flow. This is where the LLM resides, deciding how the organism’s mass should shift based on current chemical gradients.
-- **`src/organism/trace/` (Memory):** Extracellular trails. Embeddings and logs are "secreted" into the environment, influencing future pulses through attraction or repulsion.
-- **`src/organism/pseudopodia/` (Interaction):** "False feet." Temporary extensions (Tools/Skills) created to reach specific environmental nutrients (APIs).
+```text
+slime/
+├── Cargo.toml
+└── src/
+    ├── main.rs                # Spark: create one or more Mass objects
+    ├── mass/                  # Protoplasm: decentralized working unit
+    │   ├── mod.rs             # Construct logic for Mass
+    │   ├── pulse.rs           # Stateless pulse definition
+    │   ├── boundary.rs        # Input ingestion + output synthesis
+    │   └── memory/
+    │       ├── mod.rs
+    │       └── blackboard.rs  # Shared thread-safe state container
+    ├── skills/
+    ├── tools/
+    └── runtime/
+```
 
 ---
 
-## ⚙️ Technical Implementation: The Gradient Map
+## 🧩 Mass Model
 
-The organism interacts with a shared thread-safe map where concentrations of `Nutrient`, `Repellent`, and `Trace` determine the behavior:
+- A `Mass` must have:
+  - exactly one memory (`Blackboard` via `mass/memory`)
+  - one or more pulses (`mass/pulse`)
+- A pulse can connect to:
+  - `runtime`
+  - `skills`
+  - `tools`
 
-```rust
-// The core rhythm of the organism
-async fn pulse(&mut self) {
-    loop {
-        // Sense environment & aggregate signals
-        let gradient = self.membrane.contract().await; 
-        
-        // Adjust metabolic rate based on signal intensity
-        self.adapt_metabolism(&gradient);
+Current implementation is intentionally placeholder-first to lock architecture before behavior.
 
-        // Flow toward stimulus (LLM invocation)
-        self.flux.expand(gradient).await;              
-        
-        // Rhythmic rest
-        tokio::time::sleep(self.metabolism).await;     
-    }
-}
+---
+
+## 🔁 Pulse Cycle (Conceptual)
+
+1. User input and prior outputs are written into the blackboard.
+2. A stateless pulse reads the latest blackboard state.
+3. Pulse performs a fresh LLM I/O call.
+4. Boundary normalizes/synthesizes output.
+5. Blackboard updates with new state.
+
+This repeats with no hidden per-pulse context.

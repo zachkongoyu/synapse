@@ -1,10 +1,9 @@
-mod organism;
-mod vitality;
-mod providers;
+mod mass;
 mod skills;
 mod tools;
+mod runtime;
 
 fn main() {
-    vitality::assert_vitality_impl::<organism::Organism>();
-    println!("Hello, world!");
+    let masses = vec![mass::Mass::placeholder()];
+    println!("Ignited {} Mass instance(s)", masses.len());
 }
